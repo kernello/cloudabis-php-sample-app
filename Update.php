@@ -105,7 +105,7 @@
             </div>
             <div>
                 <label id="lblCurrentDeviceName">Current Device Name:</label>
-                <input type="button" name="biometricCapture" value="Biometric Capture" onclick="captureBiometric()">
+                <input type="button" name="biometricCapture" value="Biometric Capture" onclick="captureBiometric('Update')">
                 <input type="submit" name="update" value="Update">
             </div>
             <input type="button" value="Back" onClick="javascript:backToHome()">
