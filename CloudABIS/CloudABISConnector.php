@@ -80,12 +80,12 @@ class CloudABISConnector
         $cloudABISAPI = new CloudABISAPI($this->_appkey, $this->_secretKey, $this->_apiBaseUrl);
         $matchingResponse = $cloudABISAPI->IsRegistered($biometricRequest);
 
-        if ($matchingResponse != null) {
-            $matchingResponseInJsonObject = json_decode($matchingResponse);
-            return CloudABISResponseParser::GetResponseMessage($matchingResponseInJsonObject->OperationResult);
-        } else {
-            return "Something went wrong!";
-        }
+
+        if ($matchingResponse != null && $matchingResponse[0] == 200)
+            return CloudABISResponseParser::GetResponseMessage($matchingResponse[1]->OperationResult);
+        else 
+            return CloudABISResponseParser::GetErrorMessage($matchingResponse[0]);
+        
     }
 
     /// <summary>
@@ -105,12 +105,11 @@ class CloudABISConnector
 
         $cloudABISAPI = new CloudABISAPI($this->_appkey, $this->_secretKey, $this->_apiBaseUrl);
         $matchingResponse = $cloudABISAPI->ChangeID($biometricRequest);
-        if ($matchingResponse != null) {
-            $matchingResponseInJsonObject = json_decode($matchingResponse);
-            return CloudABISResponseParser::GetResponseMessage($matchingResponseInJsonObject->OperationResult);
-        } else {
-            return "Something went wrong!";
-        }
+
+        if ($matchingResponse != null && $matchingResponse[0] == 200)
+           return CloudABISResponseParser::GetResponseMessage($matchingResponse[1]->OperationResult);
+        else 
+          return CloudABISResponseParser::GetErrorMessage($matchingResponse[0]);
 
     }
 
@@ -129,12 +128,11 @@ class CloudABISConnector
 
         $cloudABISAPI = new CloudABISAPI($this->_appkey, $this->_secretKey, $this->_apiBaseUrl);
         $matchingResponse = $cloudABISAPI->RemoveID($biometricRequest);
-        if ($matchingResponse != null) {
-            $matchingResponseInJsonObject = json_decode($matchingResponse);
-            return CloudABISResponseParser::GetResponseMessage($matchingResponseInJsonObject->OperationResult);
-        } else {
-            return "Something went wrong!";
-        }
+        
+        if ($matchingResponse != null && $matchingResponse[0] == 200)
+           return CloudABISResponseParser::GetResponseMessage($matchingResponse[1]->OperationResult);
+        else 
+          return CloudABISResponseParser::GetErrorMessage($matchingResponse[0]);
 
     }
 
@@ -161,20 +159,19 @@ class CloudABISConnector
 
         $cloudABISAPI = new CloudABISAPI($this->_appkey, $this->_secretKey, $this->_apiBaseUrl);
         $matchingResponse = $cloudABISAPI->Register($biometricRequest);
-        if ($matchingResponse != null) {
-            $matchingResponseInJsonObject = json_decode($matchingResponse);
-            if ($matchingResponseInJsonObject->OperationName == EnumOperationName::Register && $matchingResponseInJsonObject->OperationResult == CloudABISConstant::SUCCESS) {
+
+        if ($matchingResponse != null && $matchingResponse[0] == 200){
+            if ($matchingResponse[1]->OperationName == EnumOperationName::Register && $matchingResponse[1]->OperationResult == CloudABISConstant::SUCCESS) {
                 return "Registration Success!";
-            } elseif ($matchingResponseInJsonObject->OperationName == EnumOperationName::IsRegistered && $matchingResponseInJsonObject->OperationResult == CloudABISConstant::YES) {
+            } elseif ($matchingResponse[1]->OperationName == EnumOperationName::IsRegistered && $matchingResponse[1]->OperationResult == CloudABISConstant::YES) {
                 return CloudABISConstant::YES_MESSAGE;
             } else {
-                return CloudABISResponseParser::GetResponseMessage($matchingResponseInJsonObject->OperationResult);
+                return CloudABISResponseParser::GetResponseMessage($matchingResponse[1]->OperationResult);
             }
-
-        } else {
-            return "Something went wrong!";
         }
-
+       else{
+        return CloudABISResponseParser::GetErrorMessage($matchingResponse[0]);
+       }   
     }
 
     /// <summary>
@@ -198,17 +195,17 @@ class CloudABISConnector
 
         $cloudABISAPI = new CloudABISAPI($this->_appkey, $this->_secretKey, $this->_apiBaseUrl);
         $matchingResponse = $cloudABISAPI->Update($biometricRequest);
-        if ($matchingResponse != null) {
-            $matchingResponseInJsonObject = json_decode($matchingResponse);
-            if ($matchingResponseInJsonObject->OperationName == EnumOperationName::Update && $matchingResponseInJsonObject->OperationResult == CloudABISConstant::SUCCESS) {
+  
+        if ($matchingResponse != null && $matchingResponse[0] == 200){
+            if ($matchingResponse[1]->OperationName == EnumOperationName::Update && $matchingResponse[1]->OperationResult == CloudABISConstant::SUCCESS) {
                 return "Update Biometric Success!";
             } else {
-                return CloudABISResponseParser::GetResponseMessage($matchingResponseInJsonObject->OperationResult);
+                return CloudABISResponseParser::GetResponseMessage($matchingResponse[1]->OperationResult);
             }
-
-        } else {
-            return "Something went wrong!";
         }
+       else{
+        return CloudABISResponseParser::GetErrorMessage($matchingResponse[0]);
+       } 
 
     }
 
@@ -231,17 +228,17 @@ class CloudABISConnector
 
         $cloudABISAPI = new CloudABISAPI($this->_appkey, $this->_secretKey, $this->_apiBaseUrl);
         $matchingResponse = $cloudABISAPI->Identify($biometricRequest);
-        if ($matchingResponse != null) {
-            $matchingResponseInJsonObject = json_decode($matchingResponse);
-            if ($matchingResponseInJsonObject->OperationName == EnumOperationName::Identify && $matchingResponseInJsonObject->OperationResult == CloudABISConstant::MATCH_FOUND) {
-                return (CloudABISResponseParser::GetResponseMessage($matchingResponseInJsonObject->OperationResult) . ": " . $matchingResponseInJsonObject->BestResult->ID);
-            } else {
-                return CloudABISResponseParser::GetResponseMessage($matchingResponseInJsonObject->OperationResult);
-            }
+        
 
-        } else {
-            return "Something went wrong!";
-        }
+        if ($matchingResponse != null && $matchingResponse[0] == 200){
+            if ($matchingResponse[1]->OperationName == EnumOperationName::Identify && $matchingResponse[1]->OperationResult == CloudABISConstant::MATCH_FOUND){
+                    return (CloudABISResponseParser::GetResponseMessage($matchingResponse[1]->OperationResult) . ": " . $matchingResponse[1]->BestResult->ID);
+                } else {
+                    return CloudABISResponseParser::GetResponseMessage($matchingResponse[1]->OperationResult);
+                }
+        } else{
+        return CloudABISResponseParser::GetErrorMessage($matchingResponse[0]);
+       } 
 
     }
 
@@ -266,12 +263,12 @@ class CloudABISConnector
 
         $cloudABISAPI = new CloudABISAPI($this->_appkey, $this->_secretKey, $this->_apiBaseUrl);
         $matchingResponse = $cloudABISAPI->Verify($biometricRequest);
-        if ($matchingResponse != null) {
-            $matchingResponseInJsonObject = json_decode($matchingResponse);
-            return CloudABISResponseParser::GetResponseMessage($matchingResponseInJsonObject->OperationResult);
-        } else {
-            return "Something went wrong!";
-        }
+      
+        if ($matchingResponse != null && $matchingResponse[0] == 200){
+             return CloudABISResponseParser::GetResponseMessage($matchingResponse[1]->OperationResult);
+        } else{
+        return CloudABISResponseParser::GetErrorMessage($matchingResponse[0]);
+       }
 
     }
 

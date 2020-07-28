@@ -2,7 +2,7 @@ var engineName = EnumEngines.FingerPrint;
 /*
 * Biometric Capture
 */
-function captureBiometric() {
+function captureBiometric(buttonName) {
 	// debugger
 	document.getElementById('templateXML').value = '';
 	document.getElementById('serverResult').style.display = 'none';
@@ -20,21 +20,30 @@ function captureBiometric() {
 	CloudABISScanrInit(apiPath);
 	var captureType = document.getElementById("captureType");
 	captureType = captureType.options[captureType.selectedIndex].value;
-	var quickScan = EnumFeatureMode.Disable;
+	var quickScan;
+
+	if(buttonName=='Register' || buttonName=='Verify'|| buttonName=='Update' ){
+	     quickScan = EnumFeatureMode.Disable;
+     }
+	else{
+
+		quickScan = document.getElementById("quickScan");
+	    quickScan = quickScan.options[quickScan.selectedIndex].value;
+	}
 
 	/*API Call*/
 	if (engineName == EnumEngines.FingerPrint) {
 		console.log(captureType);
 		FingerPrintCapture(deviceName, quickScan, templateFormat, captureType, EnumCaptureMode.TemplateOnly, EnumBiometricImageFormat.WSQ,
-			EnumSingleCaptureMode.LeftFingerCapture, 180.0, EnumCaptureOperationName.ENROLL, CaptureResult);
+			EnumSingleCaptureMode.LeftFingerCapture, 180.0, EnumCaptureOperationName.ENROLL, CaptureResult,buttonName);
 	}
 	
 	else if (engineName == EnumEngines.FingerVein)
-		FingerVeinCapture(deviceName, quickScan, captureType, 180.0, EnumCaptureOperationName.ENROLL, CaptureResult);
+		FingerVeinCapture(deviceName, quickScan, captureType, 180.0, EnumCaptureOperationName.ENROLL, CaptureResult,buttonName);
 	else if (engineName == EnumEngines.Iris)
-		IrisCapture(deviceName, quickScan, 180.0, EnumFeatureMode.Disable, CaptureResult);
+		IrisCapture(deviceName, quickScan, 180.0, EnumFeatureMode.Disable, CaptureResult,buttonName);
 	else if (engineName == EnumEngines.Face)
-		FaceCapture(quickScan, 180.0, EnumFeatureMode.Disable, EnumFaceImageFormat.Jpeg, EnumCaptureOperationName.ENROLL, CaptureResult);
+		FaceCapture(quickScan, 180.0, EnumFeatureMode.Disable, EnumFaceImageFormat.Jpeg, EnumCaptureOperationName.ENROLL, CaptureResult,buttonName);
 }
 
 function getCookieValue(name) {
@@ -51,7 +60,9 @@ function getCookieValue(name) {
 /*
 * Hnadle capture data
 */
-function CaptureResult(captureResponse) {
+function CaptureResult(captureResponse,buttonName) {
+
+	//debugger
 	document.getElementById('serverResult').style.display = 'block';
 	if (captureResponse.CloudScanrStatus != null && captureResponse.CloudScanrStatus.Success) {
 
@@ -64,7 +75,7 @@ function CaptureResult(captureResponse) {
 		else {
 			document.getElementById('lblTemplate').style.display = 'none';
 		}
-		document.getElementById('serverResult').innerHTML = "Capture success. Please click on identify button";
+		document.getElementById('serverResult').innerHTML = "Capture success. Please click on "+buttonName+ " button";
 	}
 	else if (captureResponse.CloudScanrStatus != null) {
 		document.getElementById('serverResult').innerHTML = captureResponse.CloudScanrStatus.Message;

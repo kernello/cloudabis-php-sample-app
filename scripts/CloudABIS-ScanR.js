@@ -184,7 +184,7 @@ function GetClientInfo(callback) {
 /*
  *Will be performed finger print biometric capture
  */
-function FingerPrintCapture(deviceName, quickScan, templateFormat, captureType, captureMode, bioMetricImageFormat, singleCaptureMode, captureTimeout, captureOperationName, callback) {
+function FingerPrintCapture(deviceName, quickScan, templateFormat, captureType, captureMode, bioMetricImageFormat, singleCaptureMode, captureTimeout, captureOperationName, callback, buttonName) {
     var url = _cloudABISScanrBaseAPI + CLOUDABISSCANR_FP_CAPTURE_API_PATH;
 
 
@@ -205,7 +205,7 @@ function FingerPrintCapture(deviceName, quickScan, templateFormat, captureType, 
         success: function (ret) {
             var res = JSON.parse(JSON.stringify(ret));
             console.log('CaptureStatus: ' + res.Message);
-            callback(res);
+            callback(res,buttonName);
         },
         error: function (xhr, status, error) {
             //console.log(error);
@@ -222,7 +222,7 @@ function FingerPrintCapture(deviceName, quickScan, templateFormat, captureType, 
 /*
  *Will be performed finger vein biometric capture
  */
-function FingerVeinCapture(deviceName, quickScan, CaptureType, captureTimeout, CaptureOperationName, callback) {
+function FingerVeinCapture(deviceName, quickScan, CaptureType, captureTimeout, CaptureOperationName, callback, buttonName) {
     var url = _cloudABISScanrBaseAPI + CLOUDABISSCANR_FV_CAPTURE_API_PATH;
 
     $.support.cors = true;
@@ -239,7 +239,7 @@ function FingerVeinCapture(deviceName, quickScan, CaptureType, captureTimeout, C
         success: function (ret) {
             var res = JSON.parse(JSON.stringify(ret));
             console.log('CaptureStatus: ' + res.Message);
-            callback(res);
+            callback(res,buttonName);
         },
         error: function (xhr, status, error) {
             //console.log(error);
@@ -254,7 +254,7 @@ function FingerVeinCapture(deviceName, quickScan, CaptureType, captureTimeout, C
 /*
  *Will be performed Iris biometric capture
  */
-function IrisCapture(deviceName, captureTimeout, hasFace, callback) {
+function IrisCapture(deviceName, captureTimeout, hasFace, callback, buttonName) {
     var url = _cloudABISScanrBaseAPI + CLOUDABISSCANR_IRIS_CAPTURE_API_PATH;
 
     $.support.cors = true;
@@ -271,7 +271,7 @@ function IrisCapture(deviceName, captureTimeout, hasFace, callback) {
         success: function (ret) {
             var res = JSON.parse(JSON.stringify(ret));
             console.log('CaptureStatus: ' + res.Message);
-            callback(res);
+            callback(res,buttonName);
         },
         error: function (xhr, status, error) {
             //console.log(error);
@@ -287,7 +287,7 @@ function IrisCapture(deviceName, captureTimeout, hasFace, callback) {
 /*
  *Will be performed Iris biometric capture
  */
-function FaceCapture(quickScan, captureTimeout, isFaceSkip, faceImageFormat, captureOperationName, callback) {
+function FaceCapture(quickScan, captureTimeout, isFaceSkip, faceImageFormat, captureOperationName, callback, buttonName) {
     var uri = _cloudABISScanrBaseAPI + CLOUDABISSCANR_FACE_CAPTURE_API_PATH;
 
     $.support.cors = true;
@@ -305,7 +305,7 @@ function FaceCapture(quickScan, captureTimeout, isFaceSkip, faceImageFormat, cap
         success: function (ret) {
             var res = JSON.parse(JSON.stringify(ret));
             console.log('CaptureStatus: ' + res.Message);
-            callback(res);
+            callback(res,buttonName);
         },
         error: function (xhr, status, error) {
             //console.log(error);
