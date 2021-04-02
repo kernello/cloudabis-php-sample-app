@@ -1,6 +1,7 @@
 # cloudabis-php-sample-app
 
 Once you pull this repo, you need to configure your own CloudABIS credentails in then web.config.php. You should get all required credentials in the cloudabis portal after login.
+ - You have to install PHP 7.1 or later version to run sample application
 
 # Product & Getting Started
 - [Product Page](https://www.m2sys.com/cloud-based-abis-automated-biometric-identification-system-api/)
@@ -20,5 +21,5 @@ Once you pull this repo, you need to configure your own CloudABIS credentails in
  - [FingerVein](https://fvsvr101.cloudabis.com/v1/Help)
 
 # Supported Biometric Devices
- - https://identity.kernello.com/device
+ - https://identity.cloudapper.com/device
 
